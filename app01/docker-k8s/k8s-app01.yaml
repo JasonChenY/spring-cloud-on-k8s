@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployment-app001
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: app001
+  template:
+    metadata:
+      labels:
+        app: app001
+    spec:
+      containers:
+      - name: app001
+        image: ccr.ccs.tencentyun.com/chenyong/app001:latest
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: http
+          containerPort: 10011
+      imagePullSecrets:
+      - name: qcloudregistrykey
+      - name: tencenthubkey
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-app001
+spec:
+  selector:
+    app: app001
+  ports:
+  - name: http
+    port: 10011
+    targetPort: 10011
+
